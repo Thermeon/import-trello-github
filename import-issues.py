@@ -53,7 +53,6 @@ parser = argparse.ArgumentParser(
 parser.add_argument("--loglevel", choices=LOG_LEVELS.keys(),
                     action=LogLevelAction, default=logging.INFO,
                     help="Set the minimum level to show logs for")
-
 parser.add_argument("--statedir", action=PyPathLocalAction,
                     help="Directory to store change state")
 parser.add_argument("--githubroot",
@@ -61,6 +60,8 @@ parser.add_argument("--githubroot",
                     help="Root for the GitHub API")
 parser.add_argument("--labelmaps", action=PyPathLocalAction,
                     help="Map Trello labels to GitHub labels")
+parser.add_argument("--ignore_closed", action='store_true',
+                    help="Ignore closed cards")
 
 parser.add_argument("trello_json", action=PyPathLocalAction,
                     help="JSON file exported from Trello")
@@ -339,6 +340,8 @@ def main():
     labels_mapper = LabelsMapper(trello_data, args)
 
     for card_data in trello_data['cards']:
+        if args.ignore_closed and card_data['closed']:
+            continue
         cards_log.debug("Card %s", card_data['name'])
         card = Card(card_data, args, labels_mapper)
         ok = card.save()
