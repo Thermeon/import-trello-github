@@ -1,0 +1,7 @@
+{
+    "lists": {
+        "To Do": {"label": "ready"},
+        "Doing": {"label": "in progress"},
+        "Blocked": {"label": ["in progress", "blocked"]}
+    }
+}
